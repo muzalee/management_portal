@@ -49,7 +49,6 @@ class CommentWidget extends StatelessWidget {
               ) : ListView.builder(
                   physics: Responsive.isDesktop(context) ? null : const NeverScrollableScrollPhysics(),
                   itemCount: state.comments.length,
-                  shrinkWrap: true,
                   itemBuilder: (context, index) {
                     return CommentListWidget(comment: state.comments[index]);
                   });

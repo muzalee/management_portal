@@ -2,7 +2,7 @@
 
 Flutter Web Project for management portal in ddd design and bloc
 
-## Structure
+## File Structure
 
 - __application__
     - __comment__
