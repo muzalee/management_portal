@@ -2,6 +2,9 @@
 
 Flutter Web Project for management portal in ddd design and bloc
 
+## [Live Preview](https://muzalee.github.io/post_portal/)
+[Click here to view](https://muzalee.github.io/post_portal/)
+
 ## File Structure
 
 - __application__
