@@ -72,8 +72,8 @@ class _PostFormModalState extends State<PostFormModal> {
         children: [
           Row(
             children: [
-              const Expanded(
-                child: Text('Create Post'),
+              Expanded(
+                child: Text('${widget.post == null ? 'Create' : 'Edit'}  Post'),
               ),
               IconButton(
                 onPressed: () => AppNavigator.pop(),
