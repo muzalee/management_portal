@@ -59,3 +59,18 @@ Flutter Web Project for management portal in ddd design and bloc
         - [profile\_card.dart](presentation/widgets/profile_card.dart)
         - [responsive.dart](presentation/widgets/responsive.dart)
         - [side\_menu.dart](presentation/widgets/side_menu.dart)
+
+
+## Screenshots
+
+![Post List](https://github.com/muzalee/management_portal/blob/master/screenshots/posts.png)
+Posts listed in table. Pagination, searching and sorting are included.
+
+![Delete Post](https://github.com/muzalee/management_portal/blob/master/screenshots/posts.png)
+Post delete confirmation, data in the table will be updated after delete.
+
+![Form](https://github.com/muzalee/management_portal/blob/master/screenshots/edit_create.png)
+Post creation and update in modal form. Newly added or updated data will be updated in the table.
+
+![Detail and Comment](https://github.com/muzalee/management_portal/blob/master/screenshots/detail.png)
+Post details and comments.
