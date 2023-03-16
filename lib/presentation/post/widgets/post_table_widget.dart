@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:management_portal/application/post/post_bloc.dart';
 import 'package:management_portal/domain/entities/post.dart';
 import 'package:management_portal/presentation/routes.dart';
+import 'package:management_portal/presentation/widgets/bouncing_button.dart';
 import 'package:management_portal/presentation/widgets/dialog.dart';
 
 import 'post_data_table_source.dart';
@@ -17,6 +19,8 @@ class PostTableWidget extends StatefulWidget {
 
 class _PostTableWidgetState extends State<PostTableWidget> {
   final TextEditingController _controller = TextEditingController();
+  final TextEditingController _limitController = TextEditingController(text: '6');
+  final TextEditingController _pageController = TextEditingController(text: '1');
   late PostBloc _bloc;
 
   @override
@@ -40,6 +44,7 @@ class _PostTableWidgetState extends State<PostTableWidget> {
           children: [
             _searchBar(),
             _table(),
+            _pagination(state),
           ],
         );
       },
@@ -109,8 +114,9 @@ class _PostTableWidgetState extends State<PostTableWidget> {
         ),
         sortColumnIndex: state is PostLoadedState ? state.sortColumnIndex : 0,
         sortAscending: state is PostLoadedState ? state.sortAscending : true,
-        rowsPerPage: 10,
+        rowsPerPage: state is PostLoadedState ? state.limit : 6,
         showCheckboxColumn: false,
+        arrowHeadColor: Colors.transparent,
       ),
     );
   }
@@ -128,6 +134,98 @@ class _PostTableWidgetState extends State<PostTableWidget> {
           ),
         );
       },
+    );
+  }
+
+  Widget _pagination(PostState state) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      margin: const EdgeInsets.fromLTRB(5, 10, 5, 0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(5),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.white,
+            offset: Offset(0.0, 0.0),
+            blurRadius: 0.0,
+            spreadRadius: 0.0,
+          ), //BoxShadow
+        ],
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 100,
+            child: TextField(
+              controller: _limitController,
+              decoration: InputDecoration(
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                prefixIcon: Text('Limit ', style: TextStyle(color: Colors.grey.shade500),),
+              ),
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp('[1-9]')),
+              ],
+              onSubmitted: (value) {
+                if (value.isEmpty) return;
+                _bloc.add(GetPostsEvent(page: state is PostLoadedState ? state.page : 0, limit: int.parse(value)));
+              },
+            ),
+          ),
+          const Spacer(),
+          BouncingButton(
+            onPress: () {
+              int page = state is PostLoadedState ? state.page == 0 ? 0 : state.page - 1 : 0;
+              _bloc.add(GetPostsEvent(page: page, limit: state is PostLoadedState ? state.limit : 6));
+              _pageController.text = (page + 1).toString();
+            },
+            child: const CircleAvatar(
+              backgroundColor: Colors.black12,
+              radius: 15,
+              child: Center(
+                child: Icon(Icons.arrow_back_ios_new, size: 15, color: Colors.black,),
+              ),
+            ),
+          ),
+          const SizedBox(width: 5),
+          SizedBox(
+            width: 50,
+            child: TextField(
+              textAlign: TextAlign.center,
+              controller: _pageController,
+              decoration: const InputDecoration(
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+              ),
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp('[1-9]')),
+              ],
+              onSubmitted: (value) {
+                if (value.isEmpty) return;
+                _bloc.add(GetPostsEvent(page: int.parse(value) - 1, limit: state is PostLoadedState ? state.limit : 6));
+              },
+            ),
+          ),
+          const SizedBox(width: 5),
+          BouncingButton(
+            onPress: () {
+              int page = state is PostLoadedState ? state.page + 1 : 0;
+              _bloc.add(GetPostsEvent(page: page, limit: state is PostLoadedState ? state.limit : 6));
+              _pageController.text = (page + 1).toString();
+            },
+            child: const CircleAvatar(
+              backgroundColor: Colors.black12,
+              radius: 15,
+              child: Center(
+                child: Icon(Icons.arrow_forward_ios, size: 15, color: Colors.black,),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

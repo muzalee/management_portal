@@ -10,8 +10,10 @@ class PostLoadedState extends PostState{
   final List<Post> filteredPosts;
   final int sortColumnIndex;
   final bool sortAscending;
+  final int page;
+  final int limit;
 
-  PostLoadedState({required this.posts, required this.filteredPosts, this.sortColumnIndex = 0, this.sortAscending = true});
+  PostLoadedState({required this.posts, required this.filteredPosts, this.sortColumnIndex = 0, this.sortAscending = true, this.page = 0, this.limit = 5});
 }
 
 class PostErrorState extends PostState{}

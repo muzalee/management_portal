@@ -16,7 +16,7 @@ class PostScreen extends StatelessWidget {
 
     return MainNav(
       child: BlocProvider(
-        create: (context) => bloc..add(GetPostsEvent()),
+        create: (context) => bloc..add(GetPostsEvent(page: 0, limit: 6)),
         child: BlocBuilder<PostBloc, PostState>(
           builder: (context, state) {
             return Center(
@@ -26,7 +26,7 @@ class PostScreen extends StatelessWidget {
                   if (state is PostLoadedState) ...[
                     const PostTableWidget(),
                   ] else if (state is PostErrorState) ...[
-                    CustomErrorWidget(onRetry: () => bloc..add(GetPostsEvent())),
+                    CustomErrorWidget(onRetry: () => bloc..add(GetPostsEvent(page: 0, limit: 6))),
                   ] else ...[
                     const Align(
                       alignment: Alignment.center,

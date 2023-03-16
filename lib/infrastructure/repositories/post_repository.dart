@@ -10,9 +10,9 @@ class PostRepository {
 
   PostRepository({required http.Client httpClient}) : _httpClient = httpClient;
 
-  Future<List<Post>> getPosts() async {
+  Future<List<Post>> getPosts(int page, int limit) async {
     try {
-      final response = await _httpClient.get(Uri.parse("$_baseUrl/posts"));
+      final response = await _httpClient.get(Uri.parse("$_baseUrl/posts?_start=$page&_limit=$limit"));
       if (response.statusCode == 200) {
         final List<dynamic> postsJson = jsonDecode(response.body);
         return postsJson.map((json) => Post.fromJson(json)).toList();

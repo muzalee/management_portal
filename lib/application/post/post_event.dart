@@ -3,7 +3,11 @@ part of 'post_bloc.dart';
 @immutable
 abstract class PostEvent {}
 
-class GetPostsEvent extends PostEvent {}
+class GetPostsEvent extends PostEvent {
+  final int page;
+  final int limit;
+  GetPostsEvent({required this.page, required this.limit});
+}
 
 class SearchPostEvent extends PostEvent {
   final String query;

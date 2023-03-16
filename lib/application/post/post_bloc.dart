@@ -22,8 +22,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
   Future<void> _onGetPosts(GetPostsEvent event, Emitter<PostState> emit) async {
     try {
-      final List<Post> posts = await repository.getPosts();
-      emit(PostLoadedState(posts: posts, filteredPosts: posts));
+      final List<Post> posts = await repository.getPosts(event.page, event.limit);
+      emit(PostLoadedState(posts: posts, filteredPosts: posts, page: event.page, limit: event.limit));
     } catch (e) {
       emit(PostErrorState());
     }
@@ -34,7 +34,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
     if (currentState is PostLoadedState) {
       final filteredPosts = currentState.posts.where((post) =>
-          post.title.toLowerCase().contains(event.query.toLowerCase()));
+          post.title.toLowerCase().contains(event.query.toLowerCase()) ||
+              post.body.toLowerCase().contains(event.query.toLowerCase()));
 
       emit(PostLoadedState(
         posts: currentState.posts,
@@ -89,6 +90,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
           filteredPosts: updatedPosts,
           sortAscending: currentState.sortAscending,
           sortColumnIndex: currentState.sortColumnIndex,
+          page: 0,
         ));
         if (event.context.mounted) {
           ScaffoldMessenger.of(event.context).showSnackBar(
